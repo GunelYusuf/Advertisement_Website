@@ -13,5 +13,6 @@ namespace Advertisements.Context
 
         public DbSet<Advertisement> advertisements { get; set; }
         public DbSet<AdvertisementPhotos> advertisementPhotos { get; set; }
+
     }
 }
