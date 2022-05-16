@@ -36,6 +36,52 @@ namespace Advertisements.Controllers
             return NotFound();
         }
 
-      
+        // POST api/values
+        [HttpPost]
+        public async Task<IActionResult> AdCreation([FromForm] CreateAdvertisementDto createAdvertisementDto)
+        {
+            try
+            {
+                Advertisement advertisement = _mapper.Map<Advertisement>(createAdvertisementDto);
+                await _appDbContext.AddAsync(advertisement);
+                var result = await _appDbContext.SaveChangesAsync() > 0;
+
+
+                if (result == true && createAdvertisementDto.photos != null)
+                {
+                    foreach (var (photo, index) in createAdvertisementDto.photos.Select((v, i) => (v, i)))
+                    {
+                        var imageResult = await _photoUploadService.AddImageAsync(photo);
+                        if (imageResult.Error != null)
+                        {
+                            _appDbContext.advertisements.Remove(advertisement);
+                            await _appDbContext.SaveChangesAsync();
+                            return BadRequest(new ProblemDetails { Title = imageResult.Error.Message });
+                        }
+
+                        AdvertisementPhotos advertisementPhotos = new();
+                        if (index == 0) advertisementPhotos.IsMain = true;
+                        advertisementPhotos.AdvertisementId = advertisement.Id;
+                        advertisementPhotos.PhotoUrl = imageResult.SecureUrl.ToString();
+                        advertisementPhotos.PublicId = imageResult.PublicId;
+                        await _appDbContext.advertisementPhotos.AddAsync(advertisementPhotos);
+
+                        var res = await _appDbContext.SaveChangesAsync() > 0;
+                        if (!res)
+                        {
+                            _appDbContext.advertisements.Remove(advertisement);
+                            await _appDbContext.SaveChangesAsync();
+                            return BadRequest(new ProblemDetails { Title = "An Error occurred while uploading the photo." });
+                        }
+                    };
+                }
+                return CreatedAtRoute("GetAd", new { Id = advertisement.Id }, advertisement.Id);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }
