@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Advertisements.Context;
 using Advertisements.Dto;
+using Advertisements.Extensions;
 using Advertisements.Models;
+using Advertisements.RequestHelpers;
 using Advertisements.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -82,6 +84,16 @@ namespace Advertisements.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult<PageList<Advertisement>> > Retrieval([FromQuery]AdParams adParams)
+        {
+            var query = _appDbContext.advertisements.Sort(adParams.OrderBy).Search(adParams.SearchTerm).Include(x => x.advertisementPhotos).AsQueryable();
+            var advertisements = await PageList<Advertisement>.TopPageList(query, adParams.PageNumber, adParams.PageSize);
+            Response.AddPaginationHeader(advertisements.MetaData);
+            return Ok(advertisements);
+        }
+
 
     }
 }

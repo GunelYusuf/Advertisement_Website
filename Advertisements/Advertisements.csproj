@@ -27,6 +27,8 @@
     <None Remove="Mapping\" />
     <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
     <None Remove="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+    <None Remove="RequestHelpers\" />
+    <None Remove="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
@@ -35,6 +37,8 @@
     <Folder Include="Dto\" />
     <Folder Include="Services\" />
     <Folder Include="Mapping\" />
+    <Folder Include="RequestHelpers\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1" />
