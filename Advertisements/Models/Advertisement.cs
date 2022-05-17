@@ -13,6 +13,8 @@ namespace Advertisements.Models
 
         public long Price { get; set; }
 
+        public DateTime CreatedDate { get; set; }
+
         public List<AdvertisementPhotos> advertisementPhotos { get; set; }
     }
 }

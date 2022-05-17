@@ -14,6 +14,8 @@ namespace Advertisements.Dto
 
         public long Price { get; set; }
 
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+
         [Required,MaxLength(3)]
         public IFormFile[] photos { get; set; }
 

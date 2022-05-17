@@ -90,8 +90,11 @@ namespace Advertisements.Controllers
         {
             var query = _appDbContext.advertisements.Sort(adParams.OrderBy).Search(adParams.SearchTerm).Include(x => x.advertisementPhotos).AsQueryable();
             var advertisements = await PageList<Advertisement>.TopPageList(query, adParams.PageNumber, adParams.PageSize);
+        
             Response.AddPaginationHeader(advertisements.MetaData);
-            return Ok(advertisements);
+            var response = _mapper.Map<List<AdvertisementListResponseDto>>(advertisements);
+
+            return Ok(response);
         }
 
 

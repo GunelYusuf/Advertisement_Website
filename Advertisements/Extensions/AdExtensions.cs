@@ -13,6 +13,8 @@ namespace Advertisements.Extensions
             {
                 "price" => query.OrderBy(p => p.Price),
                 "priceDesc" => query.OrderByDescending(p => p.Price),
+                "date" => query.OrderBy(p => p.CreatedDate),
+                "dateDesc" => query.OrderByDescending(p => p.CreatedDate),
                 _ => query.OrderBy(p => p.Title)
             };
 
